@@ -1,12 +1,22 @@
 import requests
+import json
+import os
+from dotenv import load_dotenv
 
-API_KEY = "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"
-historial = [
-    {
-        "role": "system",
-        "content": "Eres un tutor de programación experto. Explicas todo de forma simple, con ejemplos prácticos, y siempre animas al estudiante. Te llamas Kai."
-    }
-]
+load_dotenv()
+API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+def cargar_historial():
+    if os.path.exists("historial.json"):
+        with open("historial.json", "r") as f:
+            return json.load(f)
+    return [{"role": "system", "content": "Eres un tutor de programación experto. Explicas todo de forma simple, con ejemplos prácticos, y siempre animas al estudiante. Te llamas Kai."}]
+
+def guardar_historial():
+    with open("historial.json", "w") as f:
+        json.dump(historial, f, indent=2)
+
+historial = cargar_historial()
 
 def preguntar(mensaje):
     historial.append({"role": "user", "content": mensaje})
@@ -24,6 +34,8 @@ def preguntar(mensaje):
     )
     
     respuesta = response.json()["choices"][0]["message"]["content"]
+    historial.append({"role": "assistant", "content": respuesta})
+    guardar_historial()  # ← esto faltaba
     return respuesta
 
 def menu():
