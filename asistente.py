@@ -1,7 +1,12 @@
 import requests
 
-API_KEY = "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"
-historial = []
+API_KEY = "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"
+historial = [
+    {
+        "role": "system",
+        "content": "Eres un tutor de programación experto. Explicas todo de forma simple, con ejemplos prácticos, y siempre animas al estudiante. Te llamas Kai."
+    }
+]
 
 def preguntar(mensaje):
     historial.append({"role": "user", "content": mensaje})
@@ -19,7 +24,6 @@ def preguntar(mensaje):
     )
     
     respuesta = response.json()["choices"][0]["message"]["content"]
-    historial.append({"role": "assistant", "content": respuesta})
     return respuesta
 
 def menu():
