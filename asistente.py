@@ -33,10 +33,18 @@ def preguntar(mensaje):
         }
     )
     
-    respuesta = response.json()["choices"][0]["message"]["content"]
-    historial.append({"role": "assistant", "content": respuesta})
-    guardar_historial()  # ← esto faltaba
-    return respuesta
+    try:
+        respuesta = response.json()["choices"][0]["message"]["content"]
+        historial.append({"role": "assistant", "content": respuesta})
+        guardar_historial()  # ← esto faltaba
+        return respuesta
+    
+    except KeyError:
+        print("❌ Error inesperado: la IA no respondio correctamente")
+        return "Lo siento, no pude procesar tu pregunta. Intenta de nuevo."
+    except Exception as e:
+        print(f"❌ Error de conexión: {e}")
+        return "Lo siento, ocurrió un error, intenta de nuevo"
 
 def menu():
     print("🤖 Asistente IA con memoria - escribe 'salir' para terminar")
